@@ -98,7 +98,7 @@ struct LoginView: View {
                 self.loginStatusMessage = "Failed to create user \(error)"
                 return
             }
-            print("Successfull : \(result?.user.uid)")
+            print("[AAAA] Successfull : \(result?.user.uid)")
             self.loginStatusMessage = "Successfully login user"
         }
     }
