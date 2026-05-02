@@ -105,14 +105,14 @@ struct LoginView: View {
     
     private func loginUser() {
         FirebaseManager.shared.auth.signIn(withEmail: email, password: password) { result, err in
-            if let error = err {
-                print("[AAAA] Failed to login user: ", error)
-                self.loginStatusMessage = "Failed to create user \(error)"
-                return
+            DispatchQueue.main.async {
+                if let error = err {
+                    self.loginStatusMessage = "Failed to create user \(error)"
+                    return
+                }
+                self.loginStatusMessage = "Successfully login user"
+                self.didCompleteLoginProcess()
             }
-            print("[AAAA] Successfull : \(result?.user.uid)")
-            self.loginStatusMessage = "Successfully login user"
-            self.didCompleteLoginProcess()
         }
     }
     
@@ -176,13 +176,13 @@ struct LoginView: View {
         FirebaseManager.shared.firestore.collection("users")
             .document(uid)
             .setData(userData) { err in
-                if let err {
-                    print(err)
-                    self.loginStatusMessage = "\(err)"
-                    return
+                DispatchQueue.main.async {
+                    if let err {
+                        self.loginStatusMessage = "\(err)"
+                        return
+                    }
+                    self.didCompleteLoginProcess() // ✅ now on main thread
                 }
-                print("Successsss......")
-                self.didCompleteLoginProcess()
             }
     }
 }
